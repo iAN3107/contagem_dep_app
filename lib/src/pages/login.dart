@@ -44,6 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                     return 'Digite um código!';
                   }
                 },
+                keyboardType: TextInputType.number,
                 controller: CodController,
                 decoration: InputDecoration(
                   errorText: null,
@@ -63,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                     return 'Digite um Depósito!';
                   }
                 },
+                keyboardType: TextInputType.number,
                 controller: DepositoController,
                 decoration: InputDecoration(
                   labelText: 'Depósito',
@@ -81,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                     return 'Digite uma Rua!';
                   }
                 },
+                keyboardType: TextInputType.number,
                 controller: RuaController,
                 decoration: InputDecoration(
                   labelText: 'Rua',
@@ -105,7 +108,13 @@ class _LoginPageState extends State<LoginPage> {
                           formKey.currentState!.validate();
                           if (await SQLServer().verificaContagem(
                               DepositoController.text, RuaController.text)) {
-                            confirmaContagem(context, await SQLServer().retornaNome(CodController.text));
+                            confirmaContagem(
+                                context: context,
+                                nome: await SQLServer()
+                                    .retornaNome(CodController.text),
+                                cod: CodController.text,
+                                dep: DepositoController.text,
+                                rua: RuaController.text);
                           } else {
                             depositoOuRuaJaContada(context);
                           }

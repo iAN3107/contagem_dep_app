@@ -1,3 +1,4 @@
+import 'package:contagem_dep_app/src/pages/contagem.dart';
 import 'package:contagem_dep_app/src/pages/login.dart';
 import 'package:flutter/material.dart';
 
@@ -25,10 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => LoginPage(),
-      },
+      home: LoginPage(),
     );
   }
 }

@@ -47,4 +47,19 @@ class SQLServer {
 
     return usuario[0].nome;
   }
+
+
+  Future<ContagemPendentes> retornaContagem({dep, rua}) async {
+    await connection;
+
+    var res = await SqlConn.readData(
+        "SELECT * FROM PENDENTES WHERE deposito = '$dep' and rua = '$rua' and status = 0");
+
+    List<ContagemPendentes> contagem = contagemPendentesFromJson(res);
+
+    return ContagemPendentes(
+        cod: contagem[0].cod, deposito: contagem[0].deposito, rua: contagem[0].rua, bloco: contagem[0].bloco,
+        nivel: contagem[0].nivel, apartamento: contagem[0].apartamento, descricao: contagem[0].descricao,
+        fatorCaixa: contagem[0].fatorCaixa, lote: contagem[0].lote, validade: contagem[0].validade, status: contagem[0].status);
+  }
 }
