@@ -17,7 +17,7 @@ confirmaContagem({context, nome, cod, dep, rua}) {
                 child: Text('NÃO')),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ContagemPage(rua: rua, dep: dep, cod: cod,)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ContagemPage(nome: nome,rua: rua, dep: dep, cod: cod,)));
                 },
                 child: Text('SIM')),
           ],

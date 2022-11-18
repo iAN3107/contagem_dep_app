@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: CodController,
                 decoration: InputDecoration(
                   errorText: null,
-                  labelText: 'Nome',
+                  labelText: 'Código',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(
                     Icons.account_circle,
@@ -124,6 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       }
                     } catch (e) {
+                      retornaErrosCod(context, e);
                       print(e);
                     }
                   },

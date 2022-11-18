@@ -5,7 +5,7 @@ import 'package:sql_conn/sql_conn.dart';
 
 class SQLServer {
   var connection = SqlConn.connect(
-      ip: "192.168.11.100",
+      ip: "192.168.8.108",
       port: "1433",
       databaseName: "APP_CONTAGEM",
       username: 'sa',
@@ -49,17 +49,27 @@ class SQLServer {
   }
 
 
-  Future<ContagemPendentes> retornaContagem({dep, rua}) async {
+  Future<List<ContagemPendentes>> retornaContagem({dep, rua}) async {
     await connection;
 
     var res = await SqlConn.readData(
         "SELECT * FROM PENDENTES WHERE deposito = '$dep' and rua = '$rua' and status = 0");
 
-    List<ContagemPendentes> contagem = contagemPendentesFromJson(res);
+    //SELECIONA A PRIMEIRA CONTAGEM DA LISTA DO SQL
+    List<ContagemPendentes> buscaContagem = contagemPendentesFromJson(res);
 
-    return ContagemPendentes(
-        cod: contagem[0].cod, deposito: contagem[0].deposito, rua: contagem[0].rua, bloco: contagem[0].bloco,
-        nivel: contagem[0].nivel, apartamento: contagem[0].apartamento, descricao: contagem[0].descricao,
-        fatorCaixa: contagem[0].fatorCaixa, lote: contagem[0].lote, validade: contagem[0].validade, status: contagem[0].status);
+    //BUSCA A LISTA DE LOTES DA CONTAGEM
+    var selecionaContagem = await SqlConn.readData(
+        "SELECT * FROM PENDENTES WHERE deposito = '${buscaContagem[0]
+            .deposito}' and rua = '${buscaContagem[0]
+            .rua}' and  cod = '${buscaContagem[0]
+            .cod}' and bloco = '${buscaContagem[0]
+            .bloco}' and nivel = '${buscaContagem[0]
+            .nivel}' and apartamento = '${buscaContagem[0]
+            .cod}' and descricao = '${buscaContagem[0].descricao}' and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0");
+
+    List<ContagemPendentes> retornaContagens = contagemPendentesFromJson(selecionaContagem);
+
+    return retornaContagens;
   }
 }
