@@ -19,17 +19,17 @@ class ContagemPendentes {
     required this.status,
   });
 
-  int cod;
-  int deposito;
-  int rua;
-  int bloco;
-  int nivel;
-  int apartamento;
-  String descricao;
+  dynamic cod;
+  dynamic deposito;
+  dynamic rua;
+  dynamic bloco;
+  dynamic nivel;
+  dynamic apartamento;
+  dynamic descricao;
   int fatorCaixa;
-  int lote;
-  String validade;
-  int status;
+  dynamic lote;
+  dynamic validade;
+  dynamic status;
 
   factory ContagemPendentes.fromJson(Map<String, dynamic> json) => ContagemPendentes(
     cod: json["cod"],

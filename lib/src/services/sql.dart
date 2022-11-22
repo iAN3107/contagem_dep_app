@@ -5,7 +5,7 @@ import 'package:sql_conn/sql_conn.dart';
 
 class SQLServer {
   var connection = SqlConn.connect(
-      ip: "192.168.8.108",
+      ip: "192.168.11.100",
       port: "1433",
       databaseName: "APP_CONTAGEM",
       username: 'sa',
@@ -66,9 +66,12 @@ class SQLServer {
             .cod}' and bloco = '${buscaContagem[0]
             .bloco}' and nivel = '${buscaContagem[0]
             .nivel}' and apartamento = '${buscaContagem[0]
-            .cod}' and descricao = '${buscaContagem[0].descricao}' and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0");
+            .cod}' and descricao = '${buscaContagem[0]
+            .descricao}' and fatorCaixa = '${buscaContagem[0]
+            .fatorCaixa}' and status = 0");
 
-    List<ContagemPendentes> retornaContagens = contagemPendentesFromJson(selecionaContagem);
+    List<ContagemPendentes> retornaContagens = contagemPendentesFromJson(
+        selecionaContagem);
 
     return retornaContagens;
   }
