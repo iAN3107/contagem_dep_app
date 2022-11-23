@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextFormField(
                 validator: (value) {
-                  if (codError!) {
+                  if (codError) {
                     return 'Código inválido';
                   }
                   if (value!.isEmpty) {

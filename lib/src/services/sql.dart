@@ -1,6 +1,7 @@
 import 'package:contagem_dep_app/src/models/contagem_pendentes.dart';
 import 'package:contagem_dep_app/src/models/usuario.dart';
 import 'package:contagem_dep_app/src/services/sql_config.dart';
+import 'package:flutter/material.dart';
 import 'package:sql_conn/sql_conn.dart';
 
 class SQLServer {
@@ -48,7 +49,6 @@ class SQLServer {
     return usuario[0].nome;
   }
 
-
   Future<List<ContagemPendentes>> retornaContagem({dep, rua}) async {
     await connection;
 
@@ -60,19 +60,38 @@ class SQLServer {
 
     //BUSCA A LISTA DE LOTES DA CONTAGEM
     var selecionaContagem = await SqlConn.readData(
-        "SELECT * FROM PENDENTES WHERE deposito = '${buscaContagem[0]
-            .deposito}' and rua = '${buscaContagem[0]
-            .rua}' and  cod = '${buscaContagem[0]
-            .cod}' and bloco = '${buscaContagem[0]
-            .bloco}' and nivel = '${buscaContagem[0]
-            .nivel}' and apartamento = '${buscaContagem[0]
-            .cod}' and descricao = '${buscaContagem[0]
-            .descricao}' and fatorCaixa = '${buscaContagem[0]
-            .fatorCaixa}' and status = 0");
+        "SELECT * FROM PENDENTES WHERE deposito = '${buscaContagem[0].deposito}' and rua = '${buscaContagem[0].rua}' and  cod = '${buscaContagem[0].cod}' and bloco = '${buscaContagem[0].bloco}' and nivel = '${buscaContagem[0].nivel}' and apartamento = '${buscaContagem[0].apartamento}' and descricao = '${buscaContagem[0].descricao}' and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0");
 
-    List<ContagemPendentes> retornaContagens = contagemPendentesFromJson(
-        selecionaContagem);
+    List<ContagemPendentes> retornaContagens =
+        contagemPendentesFromJson(selecionaContagem);
 
     return retornaContagens;
+  }
+
+  Future<void> cadastraContagem(
+      {codigoContador,
+        cod,
+        descricao,
+      nomeContador,
+      deposito,
+      rua,
+      bloco,
+      nivel,
+      apartamento,
+      lote,
+      validade,
+      caixa,
+      unidade,
+      total}) async {
+    await connection;
+    try {
+      var res = await SqlConn.writeData(
+          "INSERT INTO CONCLUIDOS VALUES('$cod', '$codigoContador', '$nomeContador', '$deposito', "
+              " '$rua', '$bloco', '$nivel', '$apartamento', '$lote', '$validade', $caixa,"
+              " $unidade, $total, '$descricao')");
+      debugPrint(res.toString());
+    } catch(e) {
+      print(e);
+    }
   }
 }

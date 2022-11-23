@@ -19,6 +19,19 @@ class ContagemPage extends StatefulWidget {
 class _ContagemPageState extends State<ContagemPage> {
   TextStyle textoDesc = TextStyle(fontSize: 22, fontWeight: FontWeight.w700);
 
+  List<TextEditingController> unidadesExistentes = [];
+  List<TextEditingController> caixasExistentes = [];
+  List<TextEditingController> totalExistentes = [];
+
+  int _calculaTotal(caixa, unidade, int fatorCaixa) {
+    try {
+      int calculo = int.parse(caixa) * fatorCaixa + int.parse(unidade);
+      return calculo;
+    } catch (e) {
+      return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,15 +39,17 @@ class _ContagemPageState extends State<ContagemPage> {
       future: SQLServer().retornaContagem(rua: widget.rua, dep: widget.dep),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
+          final formKey = GlobalKey<FormState>();
           List<ContagemPendentes> contagem = snapshot.data;
           List<DataRow> listaLotes = [];
           int tamanhoLista = contagem.length;
-          List<TextEditingController> unidadesExistentes = [];
-          List<TextEditingController> caixasExistentes = [];
-          List<int> total = [];
+          int fatorCaixa = contagem[0].fatorCaixa;
           for (var i = 0; i < tamanhoLista; i++) {
             unidadesExistentes.add(TextEditingController());
             caixasExistentes.add(TextEditingController());
+            totalExistentes.add(TextEditingController());
+            totalExistentes[i].text =
+                '${_calculaTotal(caixasExistentes[i].text, unidadesExistentes[i].text, fatorCaixa)}';
 
             listaLotes.add(DataRow(cells: [
               DataCell(Center(
@@ -45,19 +60,50 @@ class _ContagemPageState extends State<ContagemPage> {
               )),
               DataCell(Center(
                 child: TextFormField(
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Digite algo!';
+                    }
+
+                    try {
+                      int.parse(value);
+                    } catch (e) {
+                      return 'Digite um número!';
+                    }
+                  },
                   controller: caixasExistentes[i],
                   keyboardType: TextInputType.number,
                 ),
               )),
               DataCell(Center(
                 child: TextFormField(
+                  onChanged: (values) {
+                    setState(() {});
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Digite um número!';
+                    }
+                    try {
+                      int.parse(value);
+                    } catch (e) {
+                      return 'Digite um número!';
+                    }
+                  },
                   controller: unidadesExistentes[i],
                   keyboardType: TextInputType.number,
                 ),
               )),
-              DataCell(Center(
-                child: TextFormField(),
-              )),
+              DataCell(
+                Center(
+                    child: TextFormField(
+                  controller: totalExistentes[i],
+                  enabled: false,
+                )),
+              )
             ]));
           }
 
@@ -210,46 +256,69 @@ class _ContagemPageState extends State<ContagemPage> {
                           children: [
                             Expanded(
                               child: SingleChildScrollView(
-                                child: DataTable(columns: [
-                                  DataColumn(
-                                      label: Expanded(
-                                          child: Text(
-                                    'Lote',
-                                    textAlign: TextAlign.center,
-                                  ))),
-                                  DataColumn(
-                                      label: Expanded(
-                                          child: Text(
-                                    'Validade',
-                                    textAlign: TextAlign.center,
-                                  ))),
-                                  DataColumn(
-                                      label: Expanded(
-                                          child: Text(
-                                    'Caixa',
-                                    textAlign: TextAlign.center,
-                                  ))),
-                                  DataColumn(
-                                      label: Expanded(
-                                          child: Text(
-                                    'Unidade',
-                                    textAlign: TextAlign.center,
-                                  ))),
-                                  DataColumn(
-                                      label: Expanded(
-                                          child: Text(
-                                    'Total',
-                                    textAlign: TextAlign.center,
-                                  ))),
-                                ], rows: listaLotes),
+                                child: Form(
+                                  key: formKey,
+                                  child: DataTable(columns: [
+                                    DataColumn(
+                                        label: Expanded(
+                                            child: Text(
+                                      'Lote',
+                                      textAlign: TextAlign.center,
+                                    ))),
+                                    DataColumn(
+                                        label: Expanded(
+                                            child: Text(
+                                      'Validade',
+                                      textAlign: TextAlign.center,
+                                    ))),
+                                    DataColumn(
+                                        label: Expanded(
+                                            child: Text(
+                                      'Caixa',
+                                      textAlign: TextAlign.center,
+                                    ))),
+                                    DataColumn(
+                                        label: Expanded(
+                                            child: Text(
+                                      'Unidade',
+                                      textAlign: TextAlign.center,
+                                    ))),
+                                    DataColumn(
+                                        label: Expanded(
+                                            child: Text(
+                                      'Total',
+                                      textAlign: TextAlign.center,
+                                    ))),
+                                  ], rows: listaLotes),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         ElevatedButton(
-                            onPressed: () {
-                              print(caixasExistentes[0].text);
+                            onPressed: () async {
+                              if (formKey.currentState!.validate()) {
+                                for (var i = 0; i < tamanhoLista; i++) {
+                                  await SQLServer().cadastraContagem(
+                                      cod: contagem[i].cod,
+                                      rua: contagem[i].rua,
+                                      apartamento: contagem[i].apartamento,
+                                      bloco: contagem[i].bloco,
+                                      validade: contagem[i].validade,
+                                      nivel: contagem[i].nivel,
+                                      deposito: contagem[i].deposito,
+                                      descricao: contagem[i].descricao,
+                                      lote: contagem[i].lote,
+                                      codigoContador: widget.cod,
+                                      nomeContador: widget.nome,
+                                      caixa: caixasExistentes[i].text,
+                                      unidade: unidadesExistentes[i].text,
+                                      total: totalExistentes[i].text);
+                                }
+                              }
                             },
                             child: Text('ENVIAR'))
                       ],

@@ -8,7 +8,7 @@ confirmaContagem({context, nome, cod, dep, rua}) {
         return AlertDialog(
           title: Text('ATENÇÃO'),
           content:
-              Text('Tem certeza que deseja iniciar essa contagem como $nome?'),
+          Text('Tem certeza que deseja iniciar essa contagem como $nome?'),
           actions: [
             ElevatedButton(
                 onPressed: () {
@@ -17,7 +17,10 @@ confirmaContagem({context, nome, cod, dep, rua}) {
                 child: Text('NÃO')),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ContagemPage(nome: nome,rua: rua, dep: dep, cod: cod,)));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          ContagemPage(
+                            nome: nome, rua: rua, dep: dep, cod: cod,)));
                 },
                 child: Text('SIM')),
           ],
