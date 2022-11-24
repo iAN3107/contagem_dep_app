@@ -1,5 +1,6 @@
 import 'package:contagem_dep_app/src/models/contagem_pendentes.dart';
 import 'package:contagem_dep_app/src/services/sql.dart';
+import 'package:contagem_dep_app/src/widget/alertas.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -298,29 +299,52 @@ class _ContagemPageState extends State<ContagemPage> {
                         SizedBox(
                           height: 20,
                         ),
-                        ElevatedButton(
-                            onPressed: () async {
-                              if (formKey.currentState!.validate()) {
-                                for (var i = 0; i < tamanhoLista; i++) {
-                                  await SQLServer().cadastraContagem(
-                                      cod: contagem[i].cod,
-                                      rua: contagem[i].rua,
-                                      apartamento: contagem[i].apartamento,
-                                      bloco: contagem[i].bloco,
-                                      validade: contagem[i].validade,
-                                      nivel: contagem[i].nivel,
-                                      deposito: contagem[i].deposito,
-                                      descricao: contagem[i].descricao,
-                                      lote: contagem[i].lote,
-                                      codigoContador: widget.cod,
-                                      nomeContador: widget.nome,
-                                      caixa: caixasExistentes[i].text,
-                                      unidade: unidadesExistentes[i].text,
-                                      total: totalExistentes[i].text);
-                                }
-                              }
-                            },
-                            child: Text('ENVIAR'))
+                        Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    confirmaEnvio(
+                                        apartamento: contagem[0].apartamento,
+                                        unidadesExistentes: unidadesExistentes,
+                                        totalExistentes: totalExistentes,
+                                        tamanhoLista: tamanhoLista,
+                                        contagem: contagem,
+                                        codContador: widget.cod,
+                                        nomeContador: widget.nome,
+                                        nivel: contagem[0].nivel,
+                                        bloco: contagem[0].bloco,
+                                        deposito: contagem[0].bloco,
+                                        sku: contagem[0].cod,
+                                        rua: contagem[0].rua,
+                                        context: context,
+                                        caixasExistentes: caixasExistentes);
+                                  }
+                                },
+                                child: Text('ENVIAR')),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    irParaProximo(
+                                        apartamento: contagem[0].apartamento,
+                                        unidadesExistentes: unidadesExistentes,
+                                        totalExistentes: totalExistentes,
+                                        tamanhoLista: tamanhoLista,
+                                        contagem: contagem,
+                                        codContador: widget.cod,
+                                        nomeContador: widget.nome,
+                                        nivel: contagem[0].nivel,
+                                        bloco: contagem[0].bloco,
+                                        deposito: contagem[0].bloco,
+                                        sku: contagem[0].cod,
+                                        rua: contagem[0].rua,
+                                        context: context,
+                                        caixasExistentes: caixasExistentes);
+                                  }
+                                },
+                                child: Text('PROXIMA'))
+                          ],
+                        ),
                       ],
                     ),
                   )),

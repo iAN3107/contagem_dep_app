@@ -60,7 +60,12 @@ class SQLServer {
 
     //BUSCA A LISTA DE LOTES DA CONTAGEM
     var selecionaContagem = await SqlConn.readData(
-        "SELECT * FROM PENDENTES WHERE deposito = '${buscaContagem[0].deposito}' and rua = '${buscaContagem[0].rua}' and  cod = '${buscaContagem[0].cod}' and bloco = '${buscaContagem[0].bloco}' and nivel = '${buscaContagem[0].nivel}' and apartamento = '${buscaContagem[0].apartamento}' and descricao = '${buscaContagem[0].descricao}' and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0");
+        "SELECT * FROM PENDENTES WHERE deposito = '${buscaContagem[0].deposito}'"
+        " and rua = '${buscaContagem[0].rua}' and  cod = '${buscaContagem[0].cod}'"
+        " and bloco = '${buscaContagem[0].bloco}' and nivel = '${buscaContagem[0].nivel}'"
+        " and apartamento = '${buscaContagem[0].apartamento}'"
+        " and descricao = '${buscaContagem[0].descricao}'"
+        " and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0");
 
     List<ContagemPendentes> retornaContagens =
         contagemPendentesFromJson(selecionaContagem);
@@ -70,8 +75,8 @@ class SQLServer {
 
   Future<void> cadastraContagem(
       {codigoContador,
-        cod,
-        descricao,
+      cod,
+      descricao,
       nomeContador,
       deposito,
       rua,
@@ -87,11 +92,23 @@ class SQLServer {
     try {
       var res = await SqlConn.writeData(
           "INSERT INTO CONCLUIDOS VALUES('$cod', '$codigoContador', '$nomeContador', '$deposito', "
-              " '$rua', '$bloco', '$nivel', '$apartamento', '$lote', '$validade', $caixa,"
-              " $unidade, $total, '$descricao')");
+          " '$rua', '$bloco', '$nivel', '$apartamento', '$lote', '$validade', $caixa,"
+          " $unidade, $total, '$descricao')");
       debugPrint(res.toString());
-    } catch(e) {
+    } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> retiraPendenteContagem(
+      {sku, deposito, rua, bloco, nivel, apartamento}) async {
+    await connection;
+    try {
+      var res = await SqlConn.writeData(
+          "UPDATE Pendentes SET STATUS = 1 where cod = '$sku' and deposito = '$deposito' and rua = '$rua' and bloco = '$bloco'");
+      debugPrint(res);
+    } catch (e) {
+      print('erroaqui' + e.toString());
     }
   }
 }
