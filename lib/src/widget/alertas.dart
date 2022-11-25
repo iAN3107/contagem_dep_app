@@ -54,13 +54,62 @@ confirmaEnvio(
       builder: (BuildContext) {
         return AlertDialog(
           title: Text('ATENÇÃO'),
-          content: Text('Tem certeza que deseja enviar essa contagem e sair?'),
+          content: Text('Tem certeza que deseja enviar essa contagem?'),
           actions: [
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
                 child: Text('NÃO')),
+            ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (builder) {
+                    return irParaProximo(
+                        context: context,
+                        rua: rua,
+                        caixasExistentes: caixasExistentes,
+                        sku: sku,
+                        deposito: deposito,
+                        bloco: bloco,
+                        nivel: nivel,
+                        nomeContador: nomeContador,
+                        codContador: codContador,
+                        contagem: contagem,
+                        tamanhoLista: tamanhoLista,
+                        totalExistentes: totalExistentes,
+                        unidadesExistentes: unidadesExistentes,
+                        apartamento: apartamento);
+                  }));
+                },
+                child: Text('SIM')),
+          ],
+        );
+      });
+}
+
+irParaProximo(
+    {context,
+    sku,
+    deposito,
+    rua,
+    bloco,
+    nivel,
+    apartamento,
+    tamanhoLista,
+    contagem,
+    codContador,
+    nomeContador,
+    caixasExistentes,
+    unidadesExistentes,
+    totalExistentes}) {
+  showDialog(
+      context: context,
+      builder: (BuildContext) {
+        return AlertDialog(
+          title: Text('ATENÇÃO'),
+          content: Text('Deseja enviar esta e iniciar outra contagem?'),
+          actions: [
             ElevatedButton(
                 onPressed: () async {
                   try {
@@ -98,38 +147,6 @@ confirmaEnvio(
                     debugPrint(e.toString());
                   }
                 },
-                child: Text('SIM')),
-          ],
-        );
-      });
-}
-
-irParaProximo(
-    {context,
-    sku,
-    deposito,
-    rua,
-    bloco,
-    nivel,
-    apartamento,
-    tamanhoLista,
-    contagem,
-    codContador,
-    nomeContador,
-    caixasExistentes,
-    unidadesExistentes,
-    totalExistentes}) {
-  showDialog(
-      context: context,
-      builder: (BuildContext) {
-        return AlertDialog(
-          title: Text('ATENÇÃO'),
-          content: Text('Deseja enviar esta e iniciar outra contagem?'),
-          actions: [
-            ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                },
                 child: Text('NÃO')),
             ElevatedButton(
                 onPressed: () async {
@@ -162,14 +179,11 @@ irParaProximo(
                   if (await SQLServer().verificaContagem(deposito, rua)) {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return irParaProximo(
-                          context: context,
-                          sku: sku,
-                          deposito: deposito,
-                          rua: rua,
-                          bloco: bloco,
-                          nivel: nivel,
-                          apartamento: apartamento);
+                      return ContagemPage(
+                          cod: codContador,
+                          nome: nomeContador,
+                          dep: deposito,
+                          rua: rua);
                     }));
                   } else {
                     Navigator.of(context)
