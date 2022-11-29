@@ -67,23 +67,18 @@ class SQLServer {
         " and descricao = '${buscaContagem[0].descricao}'"
         " and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0 and emContagem = 0");
 
-
     List<ContagemPendentes> retornaContagens =
         contagemPendentesFromJson(selecionaContagem);
 
     try {
       var emContagem = await SqlConn.writeData(
-          "UPDATE PENDENTES SET emContagem = 1 WHERE deposito = '${buscaContagem[0]
-              .deposito}'"
-              " and rua = '${buscaContagem[0]
-              .rua}' and  cod = '${buscaContagem[0].cod}'"
-              " and bloco = '${buscaContagem[0]
-              .bloco}' and nivel = '${buscaContagem[0].nivel}'"
-              " and apartamento = '${buscaContagem[0].apartamento}'"
-              " and descricao = '${buscaContagem[0].descricao}'"
-              " and fatorCaixa = '${buscaContagem[0]
-              .fatorCaixa}' and status = 0");
-    }catch(e){
+          "UPDATE PENDENTES SET emContagem = 1 WHERE deposito = '${buscaContagem[0].deposito}'"
+          " and rua = '${buscaContagem[0].rua}' and  cod = '${buscaContagem[0].cod}'"
+          " and bloco = '${buscaContagem[0].bloco}' and nivel = '${buscaContagem[0].nivel}'"
+          " and apartamento = '${buscaContagem[0].apartamento}'"
+          " and descricao = '${buscaContagem[0].descricao}'"
+          " and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0");
+    } catch (e) {
       print(e);
     }
 
@@ -122,7 +117,7 @@ class SQLServer {
     await connection;
     try {
       var res = await SqlConn.writeData(
-          "UPDATE Pendentes SET STATUS = 1 where cod = '$sku' and deposito = '$deposito' and rua = '$rua' and bloco = '$bloco'");
+          "UPDATE Pendentes SET STATUS = 1 where cod = '$sku' and deposito = '$deposito' and rua = '$rua' and bloco = '$bloco' and emContagem = 1");
       debugPrint(res);
     } catch (e) {
       print('erroaqui' + e.toString());

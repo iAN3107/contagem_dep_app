@@ -9,5 +9,5 @@ depositoOuRuaJaContada(context) {
 }
 
 retornaErrosCod(context, text) {
-  return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$text', style: TextStyle(fontSize: 20),)));
+  return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$text', )));
 }

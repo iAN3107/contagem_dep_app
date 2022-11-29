@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Text(
                   'CONTAGEM',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700,fontStyle: FontStyle.italic, color: Colors.blue ),
                 ),
                 SizedBox(
                   height: 15,
