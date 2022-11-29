@@ -6,7 +6,7 @@ import 'package:sql_conn/sql_conn.dart';
 
 class SQLServer {
   var connection = SqlConn.connect(
-      ip: "192.168.11.100",
+      ip: "192.168.11.99",
       port: "1433",
       databaseName: "APP_CONTAGEM",
       username: 'sa',
@@ -30,7 +30,7 @@ class SQLServer {
     await connection;
 
     var res = await SqlConn.readData(
-        "SELECT * FROM PENDENTES WHERE deposito = '$deposito' and rua = '$rua' and status = 0");
+        "SELECT * FROM PENDENTES WHERE deposito = '$deposito' and rua = '$rua' and status = 0 and emContagem = 0");
     List<ContagemPendentes> pendentes = contagemPendentesFromJson(res);
 
     if (pendentes.isNotEmpty) {
@@ -65,10 +65,27 @@ class SQLServer {
         " and bloco = '${buscaContagem[0].bloco}' and nivel = '${buscaContagem[0].nivel}'"
         " and apartamento = '${buscaContagem[0].apartamento}'"
         " and descricao = '${buscaContagem[0].descricao}'"
-        " and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0");
+        " and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0 and emContagem = 0");
+
 
     List<ContagemPendentes> retornaContagens =
         contagemPendentesFromJson(selecionaContagem);
+
+    try {
+      var emContagem = await SqlConn.writeData(
+          "UPDATE PENDENTES SET emContagem = 1 WHERE deposito = '${buscaContagem[0]
+              .deposito}'"
+              " and rua = '${buscaContagem[0]
+              .rua}' and  cod = '${buscaContagem[0].cod}'"
+              " and bloco = '${buscaContagem[0]
+              .bloco}' and nivel = '${buscaContagem[0].nivel}'"
+              " and apartamento = '${buscaContagem[0].apartamento}'"
+              " and descricao = '${buscaContagem[0].descricao}'"
+              " and fatorCaixa = '${buscaContagem[0]
+              .fatorCaixa}' and status = 0");
+    }catch(e){
+      print(e);
+    }
 
     return retornaContagens;
   }

@@ -63,55 +63,6 @@ confirmaEnvio(
                 child: Text('NÃO')),
             ElevatedButton(
                 onPressed: () async {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (builder) {
-                    return irParaProximo(
-                        context: context,
-                        rua: rua,
-                        caixasExistentes: caixasExistentes,
-                        sku: sku,
-                        deposito: deposito,
-                        bloco: bloco,
-                        nivel: nivel,
-                        nomeContador: nomeContador,
-                        codContador: codContador,
-                        contagem: contagem,
-                        tamanhoLista: tamanhoLista,
-                        totalExistentes: totalExistentes,
-                        unidadesExistentes: unidadesExistentes,
-                        apartamento: apartamento);
-                  }));
-                },
-                child: Text('SIM')),
-          ],
-        );
-      });
-}
-
-irParaProximo(
-    {context,
-    sku,
-    deposito,
-    rua,
-    bloco,
-    nivel,
-    apartamento,
-    tamanhoLista,
-    contagem,
-    codContador,
-    nomeContador,
-    caixasExistentes,
-    unidadesExistentes,
-    totalExistentes}) {
-  showDialog(
-      context: context,
-      builder: (BuildContext) {
-        return AlertDialog(
-          title: Text('ATENÇÃO'),
-          content: Text('Deseja enviar esta e iniciar outra contagem?'),
-          actions: [
-            ElevatedButton(
-                onPressed: () async {
                   try {
                     for (var i = 0; i < tamanhoLista; i++) {
                       await SQLServer().cadastraContagem(
@@ -146,6 +97,38 @@ irParaProximo(
                   } catch (e) {
                     debugPrint(e.toString());
                   }
+                },
+                child: Text('SIM')),
+          ],
+        );
+      });
+}
+
+irParaProximo(
+    {context,
+    sku,
+    deposito,
+    rua,
+    bloco,
+    nivel,
+    apartamento,
+    tamanhoLista,
+    contagem,
+    codContador,
+    nomeContador,
+    caixasExistentes,
+    unidadesExistentes,
+    totalExistentes}) {
+  showDialog(
+      context: context,
+      builder: (BuildContext) {
+        return AlertDialog(
+          title: Text('ATENÇÃO'),
+          content: Text('Deseja enviar esta e iniciar outra contagem?'),
+          actions: [
+            ElevatedButton(
+                onPressed: () async {
+                 Navigator.of(context).pop();
                 },
                 child: Text('NÃO')),
             ElevatedButton(

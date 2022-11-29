@@ -20,6 +20,7 @@ class ContagemPendentes {
     required this.lote,
     required this.validade,
     required this.status,
+    required this.emContagem,
   });
 
   dynamic cod;
@@ -33,6 +34,7 @@ class ContagemPendentes {
   dynamic lote;
   dynamic validade;
   dynamic status;
+  dynamic emContagem;
 
   factory ContagemPendentes.fromJson(Map<String, dynamic> json) =>
       ContagemPendentes(
@@ -47,6 +49,7 @@ class ContagemPendentes {
         lote: json["lote"],
         validade: json["validade"],
         status: json["status"],
+        emContagem: json["emContagem"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -61,5 +64,6 @@ class ContagemPendentes {
         "lote": lote,
         "validade": validade,
         "status": status,
+        "emContagem": emContagem,
       };
 }
