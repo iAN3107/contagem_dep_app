@@ -79,7 +79,8 @@ confirmaEnvio(
                           nomeContador: nomeContador,
                           caixa: caixasExistentes[i].text,
                           unidade: unidadesExistentes[i].text,
-                          total: totalExistentes[i].text);
+                          total: totalExistentes[i].text,
+                          fatorCaixa: contagem[i].fatorCaixa);
                     }
 
                     await SQLServer().retiraPendenteContagem(
@@ -128,7 +129,7 @@ irParaProximo(
           actions: [
             ElevatedButton(
                 onPressed: () async {
-                 Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                 },
                 child: Text('NÃO')),
             ElevatedButton(
@@ -148,7 +149,8 @@ irParaProximo(
                         nomeContador: nomeContador,
                         caixa: caixasExistentes[i].text,
                         unidade: unidadesExistentes[i].text,
-                        total: totalExistentes[i].text);
+                        total: totalExistentes[i].text,
+                        fatorCaixa: contagem[i].fatorCaixa);
                   }
 
                   await SQLServer().retiraPendenteContagem(

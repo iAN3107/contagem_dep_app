@@ -97,6 +97,7 @@ class SQLServer {
       apartamento,
       lote,
       validade,
+        fatorCaixa,
       caixa,
       unidade,
       total}) async {
@@ -104,7 +105,7 @@ class SQLServer {
     try {
       var res = await SqlConn.writeData(
           "INSERT INTO CONCLUIDOS VALUES('$cod', '$codigoContador', '$nomeContador', '$deposito', "
-          " '$rua', '$bloco', '$nivel', '$apartamento', '$lote', '$validade', $caixa,"
+          " '$rua', '$bloco', '$nivel', '$apartamento', '$lote', '$validade',$fatorCaixa, $caixa,"
           " $unidade, $total, '$descricao')");
       debugPrint(res.toString());
     } catch (e) {
@@ -114,11 +115,9 @@ class SQLServer {
 
   Future<void> retiraPendenteContagem(
       {sku, deposito, rua, bloco, nivel, apartamento}) async {
-    await connection;
     try {
       var res = await SqlConn.writeData(
-          "UPDATE Pendentes SET STATUS = 1 where cod = '$sku' and deposito = '$deposito' and rua = '$rua' and bloco = '$bloco' and emContagem = 1");
-      debugPrint(res);
+          "UPDATE Pendentes SET STATUS = 1, emContagem = 0 where cod = '$sku' and deposito = '$deposito' and rua = '$rua' and bloco = '$bloco' and nivel = '$nivel' and apartamento = '$apartamento' and status = 0 and emContagem = 1");
     } catch (e) {
       print('erroaqui' + e.toString());
     }
