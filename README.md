@@ -9,7 +9,7 @@ repositório.
 <p align="left">
 Desenvolvido em Flutter para Android, pensado para ser usado com bancos SQL Server.
 Para testes, clone esse repositório, configure o arquivo /lib/services/SQL.dart com a senha ou o banco,
-você pode também clonar o base da dados com o APP_CONTAGEM.bak, presente na raiz do repositório.
+você pode também clonar a base da dados com o APP_CONTAGEM.bak, presente na raiz do repositório.
 
 O aplicativo para entrar na contagem, deve ter alguma contagem em aberto no banco,
 crie uma contagem com o <b>status = 0 e emContagem = 0</b>, você também precisara
