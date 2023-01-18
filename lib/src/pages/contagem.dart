@@ -239,9 +239,11 @@ class _ContagemPageState extends State<ContagemPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            '${contagem[0].descricao}',
-                            style: TextStyle(fontWeight: FontWeight.w700),
+                          SingleChildScrollView(scrollDirection: Axis.horizontal,
+                            child: Text(
+                              '${contagem[0].descricao}',
+                              style: TextStyle(fontWeight: FontWeight.w700),
+                            ),
                           ),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,

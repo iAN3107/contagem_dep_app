@@ -19,7 +19,8 @@ class _LoginPageState extends State<LoginPage> {
   var codError = false;
 
   Widget build(BuildContext context) {
-    return WillPopScope( onWillPop: () async => false,
+    return WillPopScope(
+      onWillPop: () async => false,
       child: Scaffold(
           body: Center(
               child: SingleChildScrollView(
@@ -31,7 +32,11 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Text(
                   'CONTAGEM',
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700,fontStyle: FontStyle.italic, color: Colors.blue ),
+                  style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.blue),
                 ),
                 SizedBox(
                   height: 15,
@@ -104,20 +109,28 @@ class _LoginPageState extends State<LoginPage> {
                         if (CodController.text.isNotEmpty &
                             DepositoController.text.isNotEmpty &
                             RuaController.text.isNotEmpty) {
-                          if (await SQLServer().validaLogin(CodController.text)) {
+                          if (await SQLServer()
+                              .validaLogin(CodController.text)) {
                             codError = false;
                             formKey.currentState!.validate();
-                            if (await SQLServer().verificaContagem(
-                                DepositoController.text, RuaController.text)) {
-                              confirmaContagem(
-                                  context: context,
-                                  nome: await SQLServer()
-                                      .retornaNome(CodController.text),
-                                  cod: CodController.text,
-                                  dep: DepositoController.text,
-                                  rua: RuaController.text);
+                            if (await SQLServer()
+                                .verificaSeRuaEstaEmContagem(rua: RuaController.text, deposito: DepositoController.text)) {
+                              if (await SQLServer().verificaContagem(
+                                  DepositoController.text,
+                                  RuaController.text)) {
+                                confirmaContagem(
+                                    context: context,
+                                    nome: await SQLServer()
+                                        .retornaNome(CodController.text),
+                                    cod: CodController.text,
+                                    dep: DepositoController.text,
+                                    rua: RuaController.text);
+                              } else {
+                                depositoOuRuaJaContada(context);
+                              }
                             } else {
-                              depositoOuRuaJaContada(context);
+                              retornaErrosCod(context,
+                                  'Esta rua já esta sendo contada por outra pessoa...');
                             }
                           } else {
                             codError = true;

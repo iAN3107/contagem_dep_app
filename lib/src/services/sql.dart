@@ -60,24 +60,32 @@ class SQLServer {
 
     //BUSCA A LISTA DE LOTES DA CONTAGEM
     var selecionaContagem = await SqlConn.readData(
-        "SELECT * FROM PENDENTES WHERE deposito = '${buscaContagem[0].deposito}'"
-        " and rua = '${buscaContagem[0].rua}' and  cod = '${buscaContagem[0].cod}'"
-        " and bloco = '${buscaContagem[0].bloco}' and nivel = '${buscaContagem[0].nivel}'"
-        " and apartamento = '${buscaContagem[0].apartamento}'"
-        " and descricao = '${buscaContagem[0].descricao}'"
-        " and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0 and emContagem = 0");
+        "SELECT * FROM PENDENTES WHERE deposito = '${buscaContagem[0]
+            .deposito}'"
+            " and rua = '${buscaContagem[0].rua}' and  cod = '${buscaContagem[0]
+            .cod}'"
+            " and bloco = '${buscaContagem[0]
+            .bloco}' and nivel = '${buscaContagem[0].nivel}'"
+            " and apartamento = '${buscaContagem[0].apartamento}'"
+            " and descricao = '${buscaContagem[0].descricao}'"
+            " and fatorCaixa = '${buscaContagem[0]
+            .fatorCaixa}' and status = 0 and emContagem = 0");
 
     List<ContagemPendentes> retornaContagens =
-        contagemPendentesFromJson(selecionaContagem);
+    contagemPendentesFromJson(selecionaContagem);
 
     try {
       var emContagem = await SqlConn.writeData(
-          "UPDATE PENDENTES SET emContagem = 1 WHERE deposito = '${buscaContagem[0].deposito}'"
-          " and rua = '${buscaContagem[0].rua}' and  cod = '${buscaContagem[0].cod}'"
-          " and bloco = '${buscaContagem[0].bloco}' and nivel = '${buscaContagem[0].nivel}'"
-          " and apartamento = '${buscaContagem[0].apartamento}'"
-          " and descricao = '${buscaContagem[0].descricao}'"
-          " and fatorCaixa = '${buscaContagem[0].fatorCaixa}' and status = 0");
+          "UPDATE PENDENTES SET emContagem = 1 WHERE deposito = '${buscaContagem[0]
+              .deposito}'"
+              " and rua = '${buscaContagem[0]
+              .rua}' and  cod = '${buscaContagem[0].cod}'"
+              " and bloco = '${buscaContagem[0]
+              .bloco}' and nivel = '${buscaContagem[0].nivel}'"
+              " and apartamento = '${buscaContagem[0].apartamento}'"
+              " and descricao = '${buscaContagem[0].descricao}'"
+              " and fatorCaixa = '${buscaContagem[0]
+              .fatorCaixa}' and status = 0");
     } catch (e) {
       print(e);
     }
@@ -85,28 +93,27 @@ class SQLServer {
     return retornaContagens;
   }
 
-  Future<void> cadastraContagem(
-      {codigoContador,
-      cod,
-      descricao,
-      nomeContador,
-      deposito,
-      rua,
-      bloco,
-      nivel,
-      apartamento,
-      lote,
-      validade,
-        fatorCaixa,
-      caixa,
-      unidade,
-      total}) async {
+  Future<void> cadastraContagem({codigoContador,
+    cod,
+    descricao,
+    nomeContador,
+    deposito,
+    rua,
+    bloco,
+    nivel,
+    apartamento,
+    lote,
+    validade,
+    fatorCaixa,
+    caixa,
+    unidade,
+    total}) async {
     await connection;
     try {
       var res = await SqlConn.writeData(
           "INSERT INTO CONCLUIDOS VALUES('$cod', '$codigoContador', '$nomeContador', '$deposito', "
-          " '$rua', '$bloco', '$nivel', '$apartamento', '$lote', '$validade',$fatorCaixa, $caixa,"
-          " $unidade, $total, '$descricao')");
+              " '$rua', '$bloco', '$nivel', '$apartamento', '$lote', '$validade',$fatorCaixa, $caixa,"
+              " $unidade, $total, '$descricao')");
       debugPrint(res.toString());
     } catch (e) {
       print(e);
@@ -120,6 +127,27 @@ class SQLServer {
           "UPDATE Pendentes SET STATUS = 1, emContagem = 0 where cod = '$sku' and deposito = '$deposito' and rua = '$rua' and bloco = '$bloco' and nivel = '$nivel' and apartamento = '$apartamento' and status = 0 and emContagem = 1");
     } catch (e) {
       print('erroaqui' + e.toString());
+    }
+  }
+
+  Future<bool> verificaSeRuaEstaEmContagem({deposito, rua}) async {
+    try {
+      var res = await SqlConn.readData("SELECT * from pendentes where deposito = '$deposito' and rua = '$rua'");
+
+      List<ContagemPendentes> pendentes = contagemPendentesFromJson(res);
+
+
+      for (var value in pendentes) {
+        if (value.emContagem == 1) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+    catch (e) {
+      print('erro aqui' + e.toString());
+      return false;
     }
   }
 }
